@@ -19,7 +19,9 @@ class SearchLibraryBookShelf extends Component {
     }
 
     render() {
-        return (<BooksShelf title={this.props.title} books={this.state.books}/>)
+        return (<BooksShelf title={this.props.title}
+                            books={this.state.books}
+                            onBookShelfChangerClick={this.props.onBookShelfChangerClick}/>)
     }
 }
 

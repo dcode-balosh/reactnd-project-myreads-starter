@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 class Book extends Component {
-    render() {
+    render(){
         let book = this.props.book;
         let book_authors = book.authors ? book.authors.join("\n") : 'No authors in api' // example: Android Ice Cream Sandwich Superguide
 
@@ -16,10 +16,12 @@ class Book extends Component {
 
                     </div>
                     <div className="book-shelf-changer">
-                        <select>
-                            <option value="none" disabled>Move to...</option>
-                            <option value="currentlyReading">Currently Reading
-                            </option>
+                        <select
+                            defaultValue="MoveTo"
+                            onChange={this.props.onBookShelfChangerClick.bind(null,book)}
+                        >
+                            <option value="MoveTo" disabled>Move to...</option>
+                            <option value="currentlyReading">Currently Reading</option>
                             <option value="wantToRead">Want to Read</option>
                             <option value="read">Read</option>
                             <option value="none">None</option>

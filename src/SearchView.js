@@ -30,16 +30,23 @@ class SearchView extends Component{
                 <div className="search-books-results">
                     <SearchNewBookShelf title='New Books'
                                         libraryBooks={this.props.libraryBooks}
-                                        searchedBooks={this.props.searchedBooks}/>
+                                        searchedBooks={this.props.searchedBooks}
+                                        onBookShelfChangerClick={this.props.onBookShelfChangerClick}/>
                     <SearchLibraryBookShelf title='Currently Reading'
+                                            libraryBooks={this.props.libraryBooks}
                                             shelfBooks={this.props.currentlyReadingBooks}
-                                            searchedBooks={this.props.searchedBooks}/>
+                                            searchedBooks={this.props.searchedBooks}
+                                            onBookShelfChangerClick={this.props.onBookShelfChangerClick}/>
                     <SearchLibraryBookShelf title='Want to Read'
+                                            libraryBooks={this.props.libraryBooks}
                                             shelfBooks={this.props.wantToReadBooks}
-                                            searchedBooks={this.props.searchedBooks}/>
+                                            searchedBooks={this.props.searchedBooks}
+                                            onBookShelfChangerClick={this.props.onBookShelfChangerClick}/>
                     <SearchLibraryBookShelf title='Read'
+                                            libraryBooks={this.props.libraryBooks}
                                             shelfBooks={this.props.readBooks}
-                                            searchedBooks={this.props.searchedBooks}/>
+                                            searchedBooks={this.props.searchedBooks}
+                                            onBookShelfChangerClick={this.props.onBookShelfChangerClick}/>
                 </div>
             </div>
         )

@@ -3,7 +3,7 @@ import * as BooksAPI from './BooksAPI'
 import SearchView from './SearchView'
 import ListView from "./ListView";
 import './App.css'
-
+let _ = require('underscore')._;
 
 class BooksApp extends React.Component {
     state = {
@@ -23,13 +23,25 @@ class BooksApp extends React.Component {
         currentlyReadingBooks: []
     };
 
-
-    componentDidMount() {
+    getBooks = () => {
         BooksAPI.getAll().then(
             (books) => {
-                this.setState({books})
+                this.updateBooks(books)
             }
         );
+    };
+
+    updateBooks = (books) => {
+        this.setState({
+            books: books,
+            readBooks: books.filter((b) => b.shelf === 'read'),
+            wantToReadBooks: books.filter((b) => b.shelf === 'wantToRead'),
+            currentlyReadingBooks: books.filter((b) => b.shelf === 'currentlyReading')
+        })
+    };
+
+    componentDidMount() {
+        this.getBooks();
     }
 
     updateQuery = (query) => {
@@ -46,12 +58,27 @@ class BooksApp extends React.Component {
         )
     };
 
-    updateShelfBooks = (name, shelfBooks) => {
-        if(shelfBooks !== this.state[name]){
-            let h = {};
-            h[name] = shelfBooks;
-            this.setState(h);
-        }
+    onBookShelfChangerClick = (book,e) =>{
+        let shelf = e.target.value;
+        // let shelf = e.target.value;
+        BooksAPI.update(book,shelf).then(() => {
+            if(shelf !== 'none'){
+                BooksAPI.get(book.id).then(
+                    (updatedBook) => {
+                        let books = this.state.books.slice();
+                        let idx = _.findIndex(books,{id: updatedBook.id});
+                        if(idx !== -1){
+                            books[idx] = updatedBook;
+                        }else{
+                            books.push(updatedBook);
+                        }
+                        this.updateBooks(books)
+                    }
+                )
+            }else{
+                this.updateBooks(_.without(this.state.books,book))
+            }
+        });
     };
 
     onCloseClick = () => {
@@ -73,14 +100,15 @@ class BooksApp extends React.Component {
                                 updateQuery={this.updateQuery}
                                 onCloseClick={this.onCloseClick}
                                 query={this.state.query}
+                                onBookShelfChangerClick={this.onBookShelfChangerClick}
                     />
                 ) : (
                     <ListView books={this.state.books}
-                              updateShelfBooks={this.updateShelfBooks.bind(this)}
                               currentlyReadingBooks={this.state.currentlyReadingBooks}
                               wantToReadBooks={this.state.wantToReadBooks}
                               readBooks={this.state.readBooks}
                               onSearchClick={this.onSearchClick}
+                              onBookShelfChangerClick={this.onBookShelfChangerClick}
                     />
                 )}
             </div>

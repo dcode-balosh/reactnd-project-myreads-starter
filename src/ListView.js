@@ -11,20 +11,17 @@ class ListView extends Component {
                 <div className="list-books-content">
                     <div>
                         <LibraryBookShelf title='Currently Reading'
-                                          books={this.props.books}
                                           name='currentlyReading'
-                                          updateShelfBooks={this.props.updateShelfBooks}
-                                          shelfBooks={this.props.currentlyReadingBooks}/>
+                                          shelfBooks={this.props.currentlyReadingBooks}
+                                          onBookShelfChangerClick={this.props.onBookShelfChangerClick}/>
                         <LibraryBookShelf title='Want to Read'
-                                          books={this.props.books}
                                           name='wantToRead'
-                                          updateShelfBooks={this.props.updateShelfBooks}
-                                          shelfBooks={this.props.wantToReadBooks}/>
+                                          shelfBooks={this.props.wantToReadBooks}
+                                          onBookShelfChangerClick={this.props.onBookShelfChangerClick}/>
                         <LibraryBookShelf title='Read'
-                                          books={this.props.books}
                                           name='read'
-                                          updateShelfBooks={this.props.updateShelfBooks}
-                                          shelfBooks={this.props.readBooks}/>
+                                          shelfBooks={this.props.readBooks}
+                                          onBookShelfChangerClick={this.props.onBookShelfChangerClick}/>
                     </div>
                 </div>
                 <div className="open-search">
