@@ -10,7 +10,7 @@ class SearchNewBookShelf extends Component {
     componentWillReceiveProps(nextProps) {
         // generate id only arrays
         let searchedBooksIds = _.pluck(nextProps.searchedBooks, 'id');
-        let libraryBooksIds = _.pluck(nextProps.libraryBooks, 'id');
+        let libraryBooksIds = _.pluck(nextProps.books, 'id');
         // // get book only not in library
         let newSearchedBooksIds = _.difference(searchedBooksIds,libraryBooksIds);
         let books = [];

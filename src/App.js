@@ -7,22 +7,21 @@ import {Route} from "react-router-dom";
 let _ = require('underscore')._;
 
 class BooksApp extends React.Component {
-    state = {
-        /**
-         * TODO: Instead of using this state variable to keep track of which page
-         * we're on, use the URL in the browser's address bar. This will ensure that
-         * users can use the browser's back and forward buttons to navigate between
-         * pages, as well as provide a good URL they can bookmark and share.
-         */
-        showSearchPage: false,
-        books: [],
-        query: '',
-        searchedBooks: [],
-        // not great but don't have good way to pass data without redux and hops in the air
-        readBooks: [],
-        wantToReadBooks: [],
-        currentlyReadingBooks: []
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            /**
+             * TODO: Instead of using this state variable to keep track of which page
+             * we're on, use the URL in the browser's address bar. This will ensure that
+             * users can use the browser's back and forward buttons to navigate between
+             * pages, as well as provide a good URL they can bookmark and share.
+             */
+            showSearchPage: false,
+            books: [],
+            query: '',
+            searchedBooks: []
+        };
+    }
 
     getBooks = () => {
         BooksAPI.getAll().then(
@@ -34,30 +33,13 @@ class BooksApp extends React.Component {
 
     updateBooks = (books) => {
         this.setState({
-            books: books,
-            readBooks: books.filter((b) => b.shelf === 'read'),
-            wantToReadBooks: books.filter((b) => b.shelf === 'wantToRead'),
-            currentlyReadingBooks: books.filter((b) => b.shelf === 'currentlyReading')
+            books
         })
     };
 
     componentDidMount() {
         this.getBooks();
     }
-
-    updateQuery = (query) => {
-        BooksAPI.search(query, 20).then(
-            (searchedBooks) => {
-                if (!Array.isArray(searchedBooks)){
-                    searchedBooks = []
-                }
-                this.setState({
-                    query: query,
-                    searchedBooks: searchedBooks
-                })
-            }
-        )
-    };
 
     onBookShelfChangerClick = (book,e) =>{
         let shelf = e.target.value;
@@ -66,14 +48,9 @@ class BooksApp extends React.Component {
             if(shelf !== 'none'){
                 BooksAPI.get(book.id).then(
                     (updatedBook) => {
-                        let books = this.state.books.slice();
-                        let idx = _.findIndex(books,{id: updatedBook.id});
-                        if(idx !== -1){
-                            books[idx] = updatedBook;
-                        }else{
-                            books.push(updatedBook);
-                        }
-                        this.updateBooks(books)
+                        let books = this.state.books.filter((book) => book.id !== updatedBook.id );
+                        books.push(updatedBook);
+                        this.updateBooks(books);
                     }
                 )
             }else{
@@ -95,22 +72,13 @@ class BooksApp extends React.Component {
             <div className="app">
                 <Route exact path="/" render={() => (
                     <ListView books={this.state.books}
-                              currentlyReadingBooks={this.state.currentlyReadingBooks}
-                              wantToReadBooks={this.state.wantToReadBooks}
-                              readBooks={this.state.readBooks}
                               onSearchClick={this.onSearchClick}
                               onBookShelfChangerClick={this.onBookShelfChangerClick}
                     />
                 )}/>
                 <Route exact path="/search" render={() => (
-                    <SearchView libraryBooks={this.state.books}
-                                searchedBooks={this.state.searchedBooks}
-                                currentlyReadingBooks={this.state.currentlyReadingBooks}
-                                wantToReadBooks={this.state.wantToReadBooks}
-                                readBooks={this.state.readBooks}
-                                updateQuery={this.updateQuery}
+                    <SearchView books={this.state.books}
                                 onCloseClick={this.onCloseClick}
-                                query={this.state.query}
                                 onBookShelfChangerClick={this.onBookShelfChangerClick}
                     />
                 )}/>

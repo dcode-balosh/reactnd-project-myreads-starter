@@ -2,8 +2,39 @@ import React , {Component} from 'react'
 import SearchNewBookShelf from "./SearchNewBookShelf";
 import SearchLibraryBookShelf from "./SearchLibraryBookShelf";
 import {Link} from "react-router-dom";
+import {shelf_component_did_mount} from './shelfHelper'
+import * as BooksAPI from "./BooksAPI";
 
 class SearchView extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            books: [],
+            currentlyReadingBooks: [],
+            wantToReadBooks: [],
+            readBooks: [],
+            query: "",
+            searchedBooks: []
+        };
+    }
+    updateQuery = (query) => {
+        BooksAPI.search(query, 20).then(
+            (searchedBooks) => {
+                if (!Array.isArray(searchedBooks)){
+                    searchedBooks = []
+                }
+                this.setState({
+                    query: query,
+                    searchedBooks: searchedBooks
+                })
+            }
+        )
+    }
+
+    componentWillReceiveProps(nextProps){
+        shelf_component_did_mount.call(this, nextProps);
+    }
+
     render(){
         return (
             <div className="search-books">
@@ -20,8 +51,8 @@ class SearchView extends Component{
                 */}
                         <input
                             type="text"
-                            value={this.props.query}
-                            onChange={(event) => this.props.updateQuery(event.target.value)}
+                            value={this.state.query}
+                            onChange={(event) => this.updateQuery(event.target.value)}
                             placeholder="Search by title or author"
                         />
 
@@ -29,23 +60,20 @@ class SearchView extends Component{
                 </div>
                 <div className="search-books-results">
                     <SearchNewBookShelf title='New Books'
-                                        libraryBooks={this.props.libraryBooks}
-                                        searchedBooks={this.props.searchedBooks}
+                                        books={this.state.books}
+                                        searchedBooks={this.state.searchedBooks}
                                         onBookShelfChangerClick={this.props.onBookShelfChangerClick}/>
                     <SearchLibraryBookShelf title='Currently Reading'
-                                            libraryBooks={this.props.libraryBooks}
-                                            shelfBooks={this.props.currentlyReadingBooks}
-                                            searchedBooks={this.props.searchedBooks}
+                                            shelfBooks={this.state.currentlyReadingBooks}
+                                            searchedBooks={this.state.searchedBooks}
                                             onBookShelfChangerClick={this.props.onBookShelfChangerClick}/>
                     <SearchLibraryBookShelf title='Want to Read'
-                                            libraryBooks={this.props.libraryBooks}
-                                            shelfBooks={this.props.wantToReadBooks}
-                                            searchedBooks={this.props.searchedBooks}
+                                            shelfBooks={this.state.wantToReadBooks}
+                                            searchedBooks={this.state.searchedBooks}
                                             onBookShelfChangerClick={this.props.onBookShelfChangerClick}/>
                     <SearchLibraryBookShelf title='Read'
-                                            libraryBooks={this.props.libraryBooks}
-                                            shelfBooks={this.props.readBooks}
-                                            searchedBooks={this.props.searchedBooks}
+                                            shelfBooks={this.state.readBooks}
+                                            searchedBooks={this.state.searchedBooks}
                                             onBookShelfChangerClick={this.props.onBookShelfChangerClick}/>
                 </div>
             </div>
