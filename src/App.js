@@ -3,6 +3,7 @@ import * as BooksAPI from './BooksAPI'
 import SearchView from './SearchView'
 import ListView from "./ListView";
 import './App.css'
+import {Route} from "react-router-dom";
 let _ = require('underscore')._;
 
 class BooksApp extends React.Component {
@@ -91,7 +92,16 @@ class BooksApp extends React.Component {
     render() {
         return (
             <div className="app">
-                {this.state.showSearchPage ? (
+                <Route exact path="/" render={() => (
+                    <ListView books={this.state.books}
+                              currentlyReadingBooks={this.state.currentlyReadingBooks}
+                              wantToReadBooks={this.state.wantToReadBooks}
+                              readBooks={this.state.readBooks}
+                              onSearchClick={this.onSearchClick}
+                              onBookShelfChangerClick={this.onBookShelfChangerClick}
+                    />
+                )}/>
+                <Route exact path="/search" render={() => (
                     <SearchView libraryBooks={this.state.books}
                                 searchedBooks={this.state.searchedBooks}
                                 currentlyReadingBooks={this.state.currentlyReadingBooks}
@@ -102,15 +112,7 @@ class BooksApp extends React.Component {
                                 query={this.state.query}
                                 onBookShelfChangerClick={this.onBookShelfChangerClick}
                     />
-                ) : (
-                    <ListView books={this.state.books}
-                              currentlyReadingBooks={this.state.currentlyReadingBooks}
-                              wantToReadBooks={this.state.wantToReadBooks}
-                              readBooks={this.state.readBooks}
-                              onSearchClick={this.onSearchClick}
-                              onBookShelfChangerClick={this.onBookShelfChangerClick}
-                    />
-                )}
+                )}/>
             </div>
         )
     }
