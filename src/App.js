@@ -85,6 +85,7 @@ class BooksApp extends React.Component {
     onCloseClick = () => {
         this.setState({showSearchPage: false})
     };
+
     onSearchClick = () => {
         this.setState({showSearchPage: true})
     };
