@@ -1,9 +1,8 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import LibraryBookShelf from './LibraryBookShelf';
-import SearchLibraryBookShelf from './SearchLibraryBookShelf';
+import SearchView from './SearchView'
 import './App.css'
-import SearchNewBookShelf from "./SearchNewBookShelf";
 
 
 class BooksApp extends React.Component {
@@ -55,46 +54,23 @@ class BooksApp extends React.Component {
         }
     };
 
+    onCloseClick = () => {
+        this.setState({showSearchPage: false})
+    };
+
     render() {
         return (
             <div className="app">
                 {this.state.showSearchPage ? (
-                    <div className="search-books">
-                        <div className="search-books-bar">
-                            <a className="close-search" onClick={() => this.setState({showSearchPage: false})}>Close</a>
-                            <div className="search-books-input-wrapper">
-                                {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
-                                <input
-                                    type="text"
-                                    value={this.state.query}
-                                    onChange={(event) => this.updateQuery(event.target.value)}
-                                    placeholder="Search by title or author"
-                                />
-
-                            </div>
-                        </div>
-                        <div className="search-books-results">
-                            <SearchNewBookShelf title='New Books'
-                                                libraryBooks={this.state.books}
-                                                searchedBooks={this.state.searchedBooks}/>
-                            <SearchLibraryBookShelf title='Currently Reading'
-                                                    shelfBooks={this.state.currentlyReadingBooks}
-                                                    searchedBooks={this.state.searchedBooks}/>
-                            <SearchLibraryBookShelf title='Want to Read'
-                                                    shelfBooks={this.state.wantToReadBooks}
-                                                    searchedBooks={this.state.searchedBooks}/>
-                            <SearchLibraryBookShelf title='Read'
-                                                    shelfBooks={this.state.readBooks}
-                                                    searchedBooks={this.state.searchedBooks}/>
-                        </div>
-                    </div>
+                    <SearchView libraryBooks={this.state.books}
+                                searchedBooks={this.state.searchedBooks}
+                                currentlyReadingBooks={this.state.currentlyReadingBooks}
+                                wantToReadBooks={this.state.wantToReadBooks}
+                                readBooks={this.state.readBooks}
+                                updateQuery={this.updateQuery}
+                                onCloseClick={this.onCloseClick}
+                                query={this.state.query}
+                    />
                 ) : (
                     <div className="list-books">
                         <div className="list-books-title">
