@@ -51,6 +51,7 @@ class BooksApp extends React.Component {
         if(shelfBooks !== this.state[name]){
             let h = {};
             h[name] = shelfBooks;
+            this.setState(h);
         }
     };
 
@@ -104,17 +105,17 @@ class BooksApp extends React.Component {
                                 <LibraryBookShelf title='Currently Reading'
                                                   books={this.state.books}
                                                   name='currentlyReading'
-                                                  updateShelfBooks={this.updateShelfBooks}
+                                                  updateShelfBooks={this.updateShelfBooks.bind(this)}
                                                   shelfBooks={this.state.currentlyReadingBooks}/>
                                 <LibraryBookShelf title='Want to Read'
                                                   books={this.state.books}
                                                   name='wantToRead'
-                                                  updateShelfBooks={this.updateShelfBooks}
+                                                  updateShelfBooks={this.updateShelfBooks.bind(this)}
                                                   shelfBooks={this.state.wantToReadBooks}/>
                                 <LibraryBookShelf title='Read'
                                                   books={this.state.books}
                                                   name='read'
-                                                  updateShelfBooks={this.updateShelfBooks}
+                                                  updateShelfBooks={this.updateShelfBooks.bind(this)}
                                                   shelfBooks={this.state.readBooks}/>
                             </div>
                         </div>
