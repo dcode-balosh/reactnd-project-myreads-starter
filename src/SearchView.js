@@ -29,7 +29,7 @@ class SearchView extends Component{
                 </div>
                 <div className="search-books-results">
                     <SearchNewBookShelf title='New Books'
-                                        libraryBooks={this.props.books}
+                                        libraryBooks={this.props.libraryBooks}
                                         searchedBooks={this.props.searchedBooks}/>
                     <SearchLibraryBookShelf title='Currently Reading'
                                             shelfBooks={this.props.currentlyReadingBooks}
