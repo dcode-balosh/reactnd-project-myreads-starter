@@ -1,6 +1,6 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
-import BooksGrid from './BooksGrid';
+import BookShelf from './BookShelf';
 import './App.css'
 
 
@@ -13,20 +13,14 @@ class BooksApp extends React.Component {
          * pages, as well as provide a good URL they can bookmark and share.
          */
         showSearchPage: false,
-        readBooks: [],
-        readingBooks: [],
-        wantedBooks: []
+        books: []
     };
 
 
     componentDidMount() {
         BooksAPI.getAll().then(
             (books) => {
-                this.setState({
-                    readBooks: books.filter((b) => b.shelf === 'read'),
-                    readingBooks: books.filter((b) => b.shelf === 'currentlyReading'),
-                    wantedBooks: books.filter((b) => b.shelf === 'wantToRead')
-                });
+                this.setState({books})
             }
         );
     }
@@ -62,24 +56,9 @@ class BooksApp extends React.Component {
                         </div>
                         <div className="list-books-content">
                             <div>
-                                <div className="bookshelf">
-                                    <h2 className="bookshelf-title">Currently Reading</h2>
-                                    <div className="bookshelf-books">
-                                        <BooksGrid books={this.state.readingBooks}/>
-                                    </div>
-                                </div>
-                                <div className="bookshelf">
-                                    <h2 className="bookshelf-title">Want to Read</h2>
-                                    <div className="bookshelf-books">
-                                        <BooksGrid books={this.state.wantedBooks}/>
-                                    </div>
-                                </div>
-                                <div className="bookshelf">
-                                    <h2 className="bookshelf-title">Read</h2>
-                                    <div className="bookshelf-books">
-                                        <BooksGrid books={this.state.readBooks}/>
-                                    </div>
-                                </div>
+                                <BookShelf title='Currently Reading' books={this.state.books} name='currentlyReading'/>
+                                <BookShelf title='Want to Read' books={this.state.books} name='wantToRead'/>
+                                <BookShelf title='Read' books={this.state.books} name='read'/>
                             </div>
                         </div>
                         <div className="open-search">
