@@ -3,6 +3,8 @@ import React, {Component} from 'react';
 class Book extends Component {
     render() {
         let book = this.props.book;
+        let book_authors = book.authors ? book.authors.join("\n") : 'No authors in api' // example: Android Ice Cream Sandwich Superguide
+
         return (
             <div className="book">
                 <div className="book-top">
@@ -25,7 +27,7 @@ class Book extends Component {
                     </div>
                 </div>
                 <div className="book-title">{book.title}</div>
-                <div className="book-authors">{book.authors.join("\n")}</div>
+                <div className="book-authors">{book_authors}</div>
             </div>
         )
     }

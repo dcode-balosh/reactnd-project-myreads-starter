@@ -1,7 +1,9 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
-import BookShelf from './BookShelf';
+import LibraryBookShelf from './LibraryBookShelf';
+import SearchLibraryBookShelf from './SearchLibraryBookShelf';
 import './App.css'
+import SearchNewBookShelf from "./SearchNewBookShelf";
 
 
 class BooksApp extends React.Component {
@@ -13,7 +15,13 @@ class BooksApp extends React.Component {
          * pages, as well as provide a good URL they can bookmark and share.
          */
         showSearchPage: false,
-        books: []
+        books: [],
+        query: '',
+        searchedBooks: [],
+        // not great but don't have good way to pass data without redux and hops in the air
+        readBooks: [],
+        wantToReadBooks: [],
+        currentlyReadingBooks: []
     };
 
 
@@ -24,6 +32,27 @@ class BooksApp extends React.Component {
             }
         );
     }
+
+    updateQuery = (query) => {
+        BooksAPI.search(query, 20).then(
+            (searchedBooks) => {
+                if (!Array.isArray(searchedBooks)){
+                    searchedBooks = []
+                }
+                this.setState({
+                    query: query,
+                    searchedBooks: searchedBooks
+                })
+            }
+        )
+    };
+
+    updateShelfBooks = (name, shelfBooks) => {
+        if(shelfBooks !== this.state[name]){
+            let h = {};
+            h[name] = shelfBooks;
+        }
+    };
 
     render() {
         return (
@@ -41,12 +70,28 @@ class BooksApp extends React.Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                                <input type="text" placeholder="Search by title or author"/>
+                                <input
+                                    type="text"
+                                    value={this.state.query}
+                                    onChange={(event) => this.updateQuery(event.target.value)}
+                                    placeholder="Search by title or author"
+                                />
 
                             </div>
                         </div>
                         <div className="search-books-results">
-                            <ol className="books-grid"></ol>
+                            <SearchNewBookShelf title='New Books'
+                                                libraryBooks={this.state.books}
+                                                searchedBooks={this.state.searchedBooks}/>
+                            <SearchLibraryBookShelf title='Currently Reading'
+                                                    shelfBooks={this.state.currentlyReadingBooks}
+                                                    searchedBooks={this.state.searchedBooks}/>
+                            <SearchLibraryBookShelf title='Want to Read'
+                                                    shelfBooks={this.state.wantToReadBooks}
+                                                    searchedBooks={this.state.searchedBooks}/>
+                            <SearchLibraryBookShelf title='Read'
+                                                    shelfBooks={this.state.readBooks}
+                                                    searchedBooks={this.state.searchedBooks}/>
                         </div>
                     </div>
                 ) : (
@@ -56,9 +101,21 @@ class BooksApp extends React.Component {
                         </div>
                         <div className="list-books-content">
                             <div>
-                                <BookShelf title='Currently Reading' books={this.state.books} name='currentlyReading'/>
-                                <BookShelf title='Want to Read' books={this.state.books} name='wantToRead'/>
-                                <BookShelf title='Read' books={this.state.books} name='read'/>
+                                <LibraryBookShelf title='Currently Reading'
+                                                  books={this.state.books}
+                                                  name='currentlyReading'
+                                                  updateShelfBooks={this.updateShelfBooks}
+                                                  shelfBooks={this.state.currentlyReadingBooks}/>
+                                <LibraryBookShelf title='Want to Read'
+                                                  books={this.state.books}
+                                                  name='wantToRead'
+                                                  updateShelfBooks={this.updateShelfBooks}
+                                                  shelfBooks={this.state.wantToReadBooks}/>
+                                <LibraryBookShelf title='Read'
+                                                  books={this.state.books}
+                                                  name='read'
+                                                  updateShelfBooks={this.updateShelfBooks}
+                                                  shelfBooks={this.state.readBooks}/>
                             </div>
                         </div>
                         <div className="open-search">
