@@ -1,7 +1,7 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
-import LibraryBookShelf from './LibraryBookShelf';
 import SearchView from './SearchView'
+import ListView from "./ListView";
 import './App.css'
 
 
@@ -57,6 +57,9 @@ class BooksApp extends React.Component {
     onCloseClick = () => {
         this.setState({showSearchPage: false})
     };
+    onSearchClick = () => {
+        this.setState({showSearchPage: true})
+    };
 
     render() {
         return (
@@ -72,33 +75,13 @@ class BooksApp extends React.Component {
                                 query={this.state.query}
                     />
                 ) : (
-                    <div className="list-books">
-                        <div className="list-books-title">
-                            <h1>MyReads</h1>
-                        </div>
-                        <div className="list-books-content">
-                            <div>
-                                <LibraryBookShelf title='Currently Reading'
-                                                  books={this.state.books}
-                                                  name='currentlyReading'
-                                                  updateShelfBooks={this.updateShelfBooks.bind(this)}
-                                                  shelfBooks={this.state.currentlyReadingBooks}/>
-                                <LibraryBookShelf title='Want to Read'
-                                                  books={this.state.books}
-                                                  name='wantToRead'
-                                                  updateShelfBooks={this.updateShelfBooks.bind(this)}
-                                                  shelfBooks={this.state.wantToReadBooks}/>
-                                <LibraryBookShelf title='Read'
-                                                  books={this.state.books}
-                                                  name='read'
-                                                  updateShelfBooks={this.updateShelfBooks.bind(this)}
-                                                  shelfBooks={this.state.readBooks}/>
-                            </div>
-                        </div>
-                        <div className="open-search">
-                            <a onClick={() => this.setState({showSearchPage: true})}>Add a book</a>
-                        </div>
-                    </div>
+                    <ListView books={this.state.books}
+                              updateShelfBooks={this.updateShelfBooks.bind(this)}
+                              currentlyReadingBooks={this.state.currentlyReadingBooks}
+                              wantToReadBooks={this.state.wantToReadBooks}
+                              readBooks={this.state.readBooks}
+                              onSearchClick={this.onSearchClick}
+                    />
                 )}
             </div>
         )
